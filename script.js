@@ -109,7 +109,7 @@ const intents = [
     {
         "tag": "coronary arteriosclerosis",
         "patterns": [
-            "pain chest", "angina pectoris", "shortness of breath", 
+            "chest pain", "angina pectoris", "shortness of breath", 
             "hypokinesia", "sweat", "sweating increased", 
             "pressure chest", "dyspnea on exertion", "orthopnea", 
             "chest tightness"
@@ -120,7 +120,7 @@ const intents = [
                 "image": "Responsive_Images/Medication/cardiothoracic.jpeg"
             },
             {
-                "text": "It looks like you may have coronary arteriosclerosis.",
+                "text": "It looks like you may have coronary arteriosclerosis.Adilip 45 Tablet DR is a medicine used to treat high cholesterol. This medicine helps by lowering triglycerides and bad cholesterol (LDL), while at the same time raising the levels of good cholesterol (HDL). Lowering cholesterol levels reduces the risk of heart attack and stroke.",
                 "image": "Responsive_Images/Medication/adilip_45.jpeg"
             }
         ]
@@ -150,6 +150,18 @@ const intents = [
     // Just keep following the format shown above for each intent
 ];
 
+
+// Keywords for chest pain and other conditions
+const keywordToTagMap = {
+    "chest pain": "coronary arteriosclerosis",
+    "discomfort in chest": "coronary arteriosclerosis",
+    "shortness of breath": "hypertensive disease",
+    "fever": "pneumonia",
+    "cough": "pneumonia",
+    "suicidal": "depression mental"
+    // Add more keywords and their corresponding tags as needed
+};
+
 // Send message button click
 sendBtn.addEventListener('click', sendMessage);
 
@@ -161,31 +173,38 @@ userInput.addEventListener('keypress', function(event) {
     }
 });
 
-// Send message function
+// Modify existing sendMessage function to call addMessageToChat with the correct sender
 function sendMessage() {
     let userText = userInput.value.trim();
 
     if (userText) {
-        addMessageToChat('You: ' + userText, 'user-message');
+        addMessageToChat('You: ' + userText, 'user'); // User message is added on the right
         userInput.value = ''; // Clear input field
 
         // Save user message to backend
         saveMessage(userText, 'user');
 
-        botResponse(userText);
+        botResponse(userText); // Trigger bot response
     }
 }
 
 
 // Function to add a message to the chat box
-function addMessageToChat(message, className = 'chat-message') {
+function addMessageToChat(message, sender) {
     let messageDiv = document.createElement('div');
-    messageDiv.className = className;
+
+    // Check if the sender is the user or the bot, and assign the correct class
+    if (sender === 'user') {
+        messageDiv.className = 'user-message'; // Right-aligned for user
+    } else {
+        messageDiv.className = 'bot-message'; // Left-aligned for bot
+    }
+
     messageDiv.textContent = message;
-    messageDiv.setAttribute('data-text', message);
     chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom to show the latest message
 }
+
 
 
 // Function to save a message to the backend
@@ -234,7 +253,7 @@ function botResponse(userText) {
 
     // Delay bot response to simulate a real conversation
     setTimeout(() => {
-        addMessageToChat(response.text); // Display the bot's text response
+        addMessageToChat(response.text, 'bot'); // Bot message is added on the left
         saveMessage(response.text, 'bot'); // Save bot response to backend
         if (response.image) {
             addImageToChat(response.image); // Display the bot's image (if any)
@@ -242,22 +261,36 @@ function botResponse(userText) {
     }, 1000);  // 1 second delay
 }
 
-// Function to match the user's input to an intent
-function matchIntent(userText) {
-    userText = userText.toLowerCase().trim(); // Normalize and trim the user input
 
-    // Check each intent for an exact pattern match
-    for (let intent of intents) {
-        for (let pattern of intent.patterns) {
-            const regex = new RegExp(`^${pattern.toLowerCase()}$`, 'i'); // Exact match using regex
-            if (regex.test(userText)) {
+// Function to match the user's input to an intent
+// Function to match user's input to intent based on keywords or patterns
+function matchIntent(userText) {
+    userText = userText.toLowerCase().trim();
+
+    // Check for keyword matches first
+    for (let keyword in keywordToTagMap) {
+        if (userText.includes(keyword)) {
+            const tag = keywordToTagMap[keyword];
+            const intent = intents.find(intent => intent.tag === tag);
+            if (intent) {
                 const responses = intent.responses;
-                return responses[Math.floor(Math.random() * responses.length)]; // Return a random response from the matched intent
+                return responses[Math.floor(Math.random() * responses.length)];
             }
         }
     }
 
-    // If no match is found, return null
+    // If no keyword match, fallback to pattern matching within intents
+    for (let intent of intents) {
+        for (let pattern of intent.patterns) {
+            const regex = new RegExp(`\\b${pattern.toLowerCase()}\\b`, 'i');
+            if (regex.test(userText)) {
+                const responses = intent.responses;
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+        }
+    }
+
+    // Return null if no match
     return null;
 }
 
