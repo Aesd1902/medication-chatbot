@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,57 +9,179 @@ body {
     background-size: cover;
     background-position: center;
     background-image: url();
+     /* Google's preferred font */
+    font-size: 16px;
+    color: #202124;
 }
 
+/* Chat Container */
 .chat-container {
-    width: 400px;
-    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    width: 600px;
+    background: rgb(223, 255, 185); /* Clean, white background */
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border-radius: 12px; /* Subtle rounded corners */
+    position: relative;
+    z-index: 1;
+    max-width: 100%; /* Makes the chat container responsive */
+}
+
+/* Chat Box */
+.chat-box {
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column; /* Align messages vertically */
+}
+
+/* User and Bot Messages */
+.chat-message {
+    background-color: #fff; /* Clean white bubbles */
+    color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    max-width: 75%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft bubble shadow */
+    font-size: 16px; /* Larger font size for better readability */
+    line-height: 1.5;
+}
+
+.user-message {
+    background-color: #e8f0fe; /* Light blue for user messages */
+    color: #202124;
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 15px; /* Rounded with a tail on the left */
+    margin-bottom: 10px;
+    max-width: 75%;
+    align-self: flex-end; /* Align message to the right */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow */
     position: relative;
 }
 
-.chat-box {
-    height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+.bot-message {
+    background-color: #ffffff; /* White for bot messages */
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 0; /* Rounded with a tail on the right */
     margin-bottom: 10px;
-}
-
-.chat-message {
-    background-color: #4caf50;
-    color: white;
-    padding: 8px;
-    border-radius: 5px;
-    margin-bottom: 5px;
     max-width: 75%;
+    align-self: flex-start; /* Align message to the left */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    position: relative;
+}
+.user-message::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid #e8f0fe;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
 }
 
+/* Bot Message Tail (Left) */
+.bot-message::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-right: 10px solid #ffffff;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+/* Input Section */
 #user-input {
-    width: calc(100% - 60px);
-    padding: 10px;
+    width: calc(100% - 80px);
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Inner shadow for input field */
     margin-right: 10px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
 }
 
+/* Send Button */
 #send-btn {
-    padding: 10px 20px;
-    background-color: #4caf50;
+    padding: 12px 20px;
+    background-color: #1a73e8; /* Google's blue */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
 }
 
 #send-btn:hover {
-    background-color: #45a049;
+    background-color: #155ab5; /* Darker blue on hover */
 }
+
+/* Chat History */
+.history-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft outer shadow */
+}
+
+#history-box {
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 100%; /* Full width on smaller screens */
+        padding: 20px; /* Reduced padding */
+    }
+
+    .chat-box {
+        height: 300px; /* Smaller height on smaller screens */
+    }
+
+    .user-message, .bot-message {
+        max-width: 90%; /* Reduce max-width for mobile devices */
+    }
+
+    #send-btn {
+        width: 100%; /* Full width for send button on mobile */
+        margin-top: 10px;
+    }
+
+    #user-input {
+        width: 100%; /* Full width for input field */
+        margin-bottom: 10px;
+    }
+
+}
+
+
+
+
+
+
+
+
 
 /* YouTube logo styles */
 .youtube-logo {
@@ -71,21 +193,27 @@ body {
 }
 
 
-/* Chat history container */
-.history-container {
+
+
+.video-background {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 10px;
-    width: 200px;
-    height: 300px;
-    overflow-y: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place behind other elements */
+    overflow: hidden; /* Hide overflow */
 }
 
-#history-box {
-    overflow-y: auto;
-    height: 100%;
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    min-width: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* Cover the entire background */
+    pointer-events: none; /* Prevent interactions with the video */
 }
