@@ -129,24 +129,9 @@ body {
     background-color: #155ab5; /* Darker blue on hover */
 }
 
-/* Chat History */
-.history-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 10px;
-    width: 200px;
-    height: 300px;
-    overflow-y: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft outer shadow */
-}
 
-#history-box {
-    overflow-y: auto;
-    height: 100%;
-}
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
